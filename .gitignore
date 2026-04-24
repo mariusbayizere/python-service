@@ -17,3 +17,8 @@ driver_faces/
 # Compiled files
 *.bz2
 *.dat
+# Backup files — never commit
+*.backup*
+*.super1
+*.bak
+api_server.py.*
