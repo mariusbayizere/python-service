@@ -1,6 +1,19 @@
-venv/
-.env
+# Screenshots — never commit these to GitHub
+violations_screenshots/
+
+# Large ML model files
+yolo/
+
+# Python cache
 __pycache__/
 *.pyc
+*.pyo
+venv/
+.env
 
-shape_predictor_68_face_landmarks.dat*
+# Face data (privacy)
+driver_faces/
+
+# Compiled files
+*.bz2
+*.dat
