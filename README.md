@@ -9,7 +9,6 @@ Real-time driver safety monitoring using computer vision, deep learning, and ins
 
 
 
-
 📌 Overview
 DriveGuardAI is a production-grade AI monitoring service that continuously analyzes live camera feeds to detect unsafe driver behaviors in real time. It is designed to match the capabilities of commercial fleet safety platforms used across North America and Europe — such as Lytx DriveCam, Samsara AI Dash Cams, and Netradyne Driver•i.
 The system detects violations the moment they occur, saves screenshot evidence, plays an in-cabin audio warning, persists the event to a database, and immediately notifies the fleet manager via SMS and email — all within seconds.
