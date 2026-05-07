@@ -22,3 +22,11 @@ driver_faces/
 *.super1
 *.bak
 api_server.py.*
+shape_predictor_68_face_landmarks.dat
+shape_predictor_68_face_landmarks.dat.bz2.1
+venv/
+violations_screenshots/
+driver_faces/
+__pycache__/
+*.pyc
+.env
