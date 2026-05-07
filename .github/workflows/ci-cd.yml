@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  # ─── Job 1: Test Python Flask ─────────────────────────────────────────
+  # ─── Job 1: Test Flask ────────────────────────────────────────────────
   test-flask:
     name: Test Flask
     runs-on: ubuntu-latest
@@ -22,14 +22,12 @@ jobs:
           cache: 'pip'
 
       - name: Install test dependencies
-        run: |
-          pip install flask flask-cors python-dotenv pytest
+        run: pip install flask flask-cors python-dotenv pytest
 
       - name: Run Flask tests
-        run: |
-          python -m pytest --tb=short -q || echo "No tests found — skipping"
+        run: python -m pytest --tb=short -q || echo "No tests found — skipping"
 
-  # ─── Job 2: Build & Push Flask Docker image ───────────────────────────
+  # ─── Job 2: Build & Push Flask ────────────────────────────────────────
   build-push-flask:
     name: Build & Push Flask
     runs-on: ubuntu-latest
@@ -65,40 +63,19 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # ─── Job 3: Deploy Flask to Kubernetes ────────────────────────────────
-  deploy-flask:
-    name: Deploy Flask to Kubernetes
-    runs-on: ubuntu-latest
-    needs: [build-push-flask]
-    if: false # Enable when cluster is publicly accessible
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Get short SHA
-        id: sha
-        run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'v1.29.0'
-
-      - name: Configure kubectl
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG }}" | base64 -d > ~/.kube/config
-          chmod 600 ~/.kube/config
-
-      - name: Update Flask image
-        run: |
-          kubectl set image deployment/driveguard-flask \
-            flask=${{ secrets.DOCKER_USERNAME }}/driveguard-flask:${{ steps.sha.outputs.SHORT_SHA }} \
-            -n prod
-          kubectl rollout status deployment/driveguard-flask -n prod --timeout=300s
-
-      - name: Verify deployment
-        run: |
-          kubectl get pods -n prod
-          echo "✅ Flask deployment successful!"
+  # ─── Job 3: Deploy (disabled until Oracle Cloud) ──────────────────────
+  # Uncomment when you have a public Kubernetes cluster
+  # deploy-flask:
+  #   name: Deploy Flask
+  #   runs-on: ubuntu-latest
+  #   needs: [build-push-flask]
+  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: azure/setup-kubectl@v3
+  #       with:
+  #         version: 'v1.29.0'
+  #     - run: |
+  #         mkdir -p ~/.kube
+  #         echo "${{ secrets.KUBECONFIG }}" | base64 -d > ~/.kube/config
+  #         kubectl set image deployment/driveguard-flask flask=${{ secrets.DOCKER_USERNAME }}/driveguard-flask:$(git rev-parse --short HEAD) -n prod
