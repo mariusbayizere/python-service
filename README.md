@@ -1,125 +1,324 @@
-🚗 DriveGuardAI — AI-Powered Driver Monitoring System
+# 🤖 DriveGuardAI — Python AI Monitoring Service
 
-Real-time driver safety monitoring using computer vision, deep learning, and instant alerting — built for fleet operators, logistics companies, and transportation safety enforcement.
+[![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)](https://www.python.org)
+[![Flask](https://img.shields.io/badge/Flask-3.0-black?logo=flask)](https://flask.palletsprojects.com)
+[![OpenCV](https://img.shields.io/badge/OpenCV-4.8-green?logo=opencv)](https://opencv.org)
+[![YOLOv3](https://img.shields.io/badge/YOLO-v3-red)](https://pjreddie.com/darknet/yolo/)
+[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker)](https://www.docker.com)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-Deployed-326CE5?logo=kubernetes)](https://kubernetes.io)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
-/home/marius/python-service/violations_screenshots/distracted_20260411_121958.jpg
-/home/marius/python-service/violations_screenshots/distracted_20260411_122014.jpg
-/home/marius/python-service/violations_screenshots/distracted_20260413_075740.jpg
-/home/marius/python-service/violations_screenshots/distracted_20260424_124336.jpg
+> Real-time AI driver safety monitoring service using computer vision and deep learning. Detects dangerous driving behaviours, captures evidence, and instantly alerts fleet managers — all within seconds.
 
+🌐 **Live Demo:** https://driveguard.duckdns.org  
+📡 **API Health:** https://driveguard.duckdns.org/ai/api/health  
+🎥 **Live Stream:** https://driveguard.duckdns.org/ai/api/stream
 
+> This service is part of the full **DriveGuardAI** platform:  
+> 👉 [Main Repository](https://github.com/mariusbayizere/DriveGuardAI-)
 
-📌 Overview
-DriveGuardAI is a production-grade AI monitoring service that continuously analyzes live camera feeds to detect unsafe driver behaviors in real time. It is designed to match the capabilities of commercial fleet safety platforms used across North America and Europe — such as Lytx DriveCam, Samsara AI Dash Cams, and Netradyne Driver•i.
-The system detects violations the moment they occur, saves screenshot evidence, plays an in-cabin audio warning, persists the event to a database, and immediately notifies the fleet manager via SMS and email — all within seconds.
+---
 
-🎯 Key Features
-FeatureDescription👁️ Drowsiness DetectionDetects eye closure, head nodding, and fatigue patterns📱 Phone Use DetectionIdentifies phone handling while driving via computer vision😴 Distraction DetectionFlags when driver attention leaves the road🚬 Smoking DetectionYOLO-based object detection for smoking behaviour🍔 Eating/Drinking DetectionDetects food and drink consumption while driving🔔 Seatbelt DetectionAlerts when seatbelt is not worn🍺 Drunk Driving Pattern AnalysisBehavioural pattern engine — escalates when drowsiness + distraction co-occur repeatedly🎙️ Real-Time Audio AlertsIn-cabin TTS voice warnings triggered instantly📸 Automatic Screenshot EvidenceJPEG evidence captured and stored for every violation📧 Email NotificationsDetailed violation reports sent via Java backend📱 SMS NotificationsCritical alerts sent to fleet manager via Twilio🎥 Live MJPEG StreamReal-time camera feed accessible via browser or dashboard🧑 Driver Face VerificationConfirms authorized driver identity at session start🗄️ Database PersistenceAll violations stored via Spring Boot REST API
+## 📋 Table of Contents
 
-🏗️ System Architecture
-┌─────────────────────────────────────────────────────────┐
-│                    DriveGuardAI Python Service           │
-│                                                         │
-│  ┌──────────┐   ┌──────────┐   ┌─────────────────────┐ │
-│  │ Camera   │──▶│ monitor  │──▶│ violation_handler   │ │
-│  │ (OpenCV) │   │ .py      │   │ .py                 │ │
-│  └──────────┘   └──────────┘   └─────────────────────┘ │
-│                      │                  │               │
-│              ┌───────┴───────┐   ┌──────┴──────┐       │
-│              │  detector.py  │   │notifications│       │
-│              │  YOLO + Face  │   │ SMS + Email │       │
-│              └───────────────┘   └─────────────┘       │
-│                                                         │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │           api_server.py  (Flask REST API)        │   │
-│  │  /api/monitoring/start   /api/stream             │   │
-│  │  /api/monitoring/stop    /api/screenshots        │   │
-│  │  /api/test-sms           /api/health             │   │
-│  └─────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────┘
-          │                              │
-          ▼                              ▼
-┌──────────────────┐          ┌──────────────────────┐
-│  Spring Boot API │          │   React Dashboard    │
-│  (Java Backend)  │          │   (Frontend UI)      │
-│  Port 8080       │          │   Port 3000          │
-└──────────────────┘          └──────────────────────┘
+- [Overview](#overview)
+- [Violation Screenshots](#violation-screenshots)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Violations Detected](#violations-detected)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [API Reference](#api-reference)
+- [How It Works](#how-it-works)
+- [Docker & Kubernetes](#docker--kubernetes)
+- [Author](#author)
 
-📁 Project Structure
+---
+
+## 🎯 Overview
+
+DriveGuardAI Python Service is a production-grade AI monitoring microservice that continuously analyses live camera feeds to detect unsafe driver behaviours in real time. It is designed to match the capabilities of commercial fleet safety platforms like **Lytx DriveCam**, **Samsara AI**, and **Netradyne Driver•i**.
+
+The moment a violation is detected the system:
+- 📸 Captures a **JPEG screenshot** as evidence
+- 🔊 Plays an **in-cabin audio warning** via TTS
+- 💾 Saves the incident to the **database** via Spring Boot REST API
+- 📱 Sends an **SMS alert** to the fleet manager (critical violations)
+- 📧 Sends a detailed **email report** via the Java backend
+- 📉 Automatically **deducts safety score** from the driver's profile
+
+All of this happens within **2–3 seconds** of violation detection.
+
+---
+
+## 📸 Violation Screenshots
+
+Real violation evidence automatically captured by the AI system during live monitoring sessions.
+
+### 👁️ Eyes Closed — Drowsiness Detected
+![Eyes Closed 1](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/eyes_closed_20260418_074137.jpg)
+
+---
+
+![Eyes Closed 2](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/eyes_closed_20260418_074148.jpg)
+
+---
+
+![Eyes Closed 3](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/eyes_closed_20260418_074158.jpg)
+
+---
+
+![Eyes Closed 4](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/eyes_closed_20260424_093326.jpg)
+
+---
+
+### 🔔 No Seatbelt — Safety Violation Detected
+![No Seatbelt 1](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/no_seatbelt_20260205_075413.jpg)
+
+---
+
+![No Seatbelt 2](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/no_seatbelt_20260207_094231.jpg)
+
+---
+
+![No Seatbelt 3](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/no_seatbelt_20260305_111727.jpg)
+
+---
+
+### 📱 Phone Use — Distracted Driving Detected
+![Phone Use 1](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/phone_use_20260413_072734.jpg)
+
+---
+
+![Phone Use 2](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/phone_use_20260413_075720.jpg)
+
+---
+
+![Phone Use 3](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/phone_use_20260424_124337.jpg)
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| 👁️ **Drowsiness Detection** | Detects eye closure, head nodding, and fatigue patterns using Eye Aspect Ratio (EAR) |
+| 📱 **Phone Use Detection** | Identifies phone handling while driving via YOLOv3 computer vision |
+| 😴 **Distraction Detection** | Flags when driver attention leaves the road using head pose estimation |
+| 🚬 **Smoking Detection** | YOLO-based object detection for smoking behaviour |
+| 🍔 **Eating & Drinking Detection** | Detects food and drink consumption while driving |
+| 🔔 **Seatbelt Detection** | Alerts when seatbelt is not worn |
+| 🍺 **Drunk Driving Pattern Analysis** | Behavioural pattern engine — escalates when drowsiness and distraction co-occur repeatedly |
+| 🎙️ **Real-Time Audio Alerts** | In-cabin TTS voice warnings triggered instantly |
+| 📸 **Automatic Screenshot Evidence** | JPEG evidence captured and stored for every violation |
+| 📧 **Email Notifications** | Detailed violation reports sent via Java backend |
+| 📱 **SMS Notifications** | Critical alerts sent to fleet manager via Twilio |
+| 🎥 **Live MJPEG Stream** | Real-time camera feed accessible via browser or dashboard |
+| 🧑 **Driver Face Verification** | Confirms authorised driver identity at session start |
+| 🗄️ **Database Persistence** | All violations stored via Spring Boot REST API |
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  DriveGuardAI Python Service                 │
+│                                                             │
+│   Camera (OpenCV)                                           │
+│        │                                                    │
+│        ▼                                                    │
+│   monitor.py ──────────────────────────────────────────┐   │
+│        │                                               │   │
+│        ├── driver_monitoring_system_v3_simple.py       │   │
+│        │   (EAR drowsiness / head pose / seatbelt)     │   │
+│        │                                               │   │
+│        ├── detector.py                                 │   │
+│        │   (YOLOv3 → phone/smoking/eating/drinking)    │   │
+│        │   (face_recognition → driver verification)    │   │
+│        │                                               │   │
+│        └── violation_handler.py                        │   │
+│            (screenshot + audio + DB + SMS + email)     │   │
+│                     │                                  │   │
+│                     ▼                                  ▼   │
+│   ┌─────────────────────────────────────────────────────┐  │
+│   │          api_server.py  (Flask REST API)             │  │
+│   │                                                      │  │
+│   │  POST /api/monitoring/start                          │  │
+│   │  POST /api/monitoring/stop                           │  │
+│   │  GET  /api/monitoring/status                         │  │
+│   │  GET  /api/stream        (MJPEG live feed)           │  │
+│   │  GET  /api/screenshots   (evidence files)            │  │
+│   │  GET  /api/health                                    │  │
+│   └─────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+                    │                    │
+                    ▼                    ▼
+         ┌──────────────────┐  ┌──────────────────────┐
+         │  Spring Boot API │  │   React Dashboard    │
+         │  (Java Backend)  │  │   (Frontend UI)      │
+         │  Port 8080       │  │   Port 80            │
+         └──────────────────┘  └──────────────────────┘
+```
+
+### Violation Response Pipeline
+
+```
+Violation Detected
+      │
+      ├──▶ Save screenshot to disk (JPEG evidence)
+      ├──▶ Play audio warning (TTS in-cabin alert)
+      ├──▶ POST violation to Java backend → PostgreSQL
+      ├──▶ Send SMS to fleet manager (CRITICAL only)
+      └──▶ Send email via Java notification service
+```
+
+### Drunk Driving Pattern Engine
+
+```
+60-second sliding window
+        │
+        ├── Drowsy events ≥ 2  ──┐
+        │                        ├──▶ DRUNK_DRIVING (CRITICAL)
+        └── Distracted events ≥ 2 ─┘
+```
+
+---
+
+## 🚨 Violations Detected
+
+### 🔴 CRITICAL — SMS + Email + Audio + Screenshot
+
+| Violation | Detection Method | Score Deduction |
+|-----------|-----------------|-----------------|
+| `DROWSINESS` | Eye Aspect Ratio (EAR) via dlib | −10 pts |
+| `EYES_CLOSED` | Sustained eye closure | −10 pts |
+| `PHONE_USE` | YOLOv3 object detection | −10 pts |
+| `UNAUTHORIZED_DRIVER` | Face recognition mismatch | −10 pts |
+| `DRUNK_DRIVING` | Behavioural pattern escalation | −10 pts |
+
+### 🟠 HIGH — Email + Audio + Screenshot
+
+| Violation | Detection Method | Score Deduction |
+|-----------|-----------------|-----------------|
+| `DISTRACTION` | Head pose estimation | −5 pts |
+| `NO_SEATBELT` | Computer vision | −5 pts |
+| `SMOKING` | YOLOv3 object detection | −5 pts |
+
+### 🟡 MEDIUM — Audio + Screenshot
+
+| Violation | Detection Method | Score Deduction |
+|-----------|-----------------|-----------------|
+| `FATIGUE` | Yawning detection | −3 pts |
+| `EATING` | YOLOv3 food detection | −3 pts |
+| `DRINKING` | YOLOv3 bottle/cup detection | −3 pts |
+
+> ⚠️ Driver is **auto-suspended** when safety score drops below **50 points**
+
+---
+
+## 🛠️ Tech Stack
+
+| Component | Technology |
+|-----------|-----------|
+| **Web Framework** | Flask 3.0, Flask-CORS |
+| **Computer Vision** | OpenCV 4.8 |
+| **Object Detection** | YOLOv3 (COCO 80 classes) |
+| **Facial Landmarks** | dlib + shape_predictor_68_face_landmarks |
+| **Face Recognition** | face_recognition library |
+| **Deep Learning** | PyTorch 2.1 (CPU) |
+| **SMS Alerts** | Twilio |
+| **Audio Alerts** | pyttsx3 (TTS) |
+| **WSGI Server** | Gunicorn |
+| **Container** | Docker |
+| **Orchestration** | Kubernetes (Kind) |
+
+---
+
+## 📁 Project Structure
+
+```
 python-service/
 │
-├── api_server.py          # Flask entry point — REST API routes only
-├── config.py              # All environment variables & constants
-├── monitor.py             # Camera loop, MJPEG stream, frame processing
-├── detector.py            # YOLOv3 object detection + face recognition
-├── violation_handler.py   # Screenshot, audio, DB save, drunk-driving detector
-├── notifications.py       # SMS (Twilio) + Email (via Java backend)
-│
-├── driver_monitoring_system_v3_simple.py  # DMS core (drowsy/distraction/seatbelt)
+├── api_server.py                          # Flask entry point — REST API routes only
+├── config.py                              # All environment variables & constants
+├── monitor.py                             # Camera loop, MJPEG stream, frame processing
+├── detector.py                            # YOLOv3 object detection + face recognition
+├── violation_handler.py                   # Screenshot, audio, DB save, drunk-driving detector
+├── notifications.py                       # SMS (Twilio) + Email (via Java backend)
+├── driver_monitoring_system_v3_simple.py  # DMS core — EAR / head pose / seatbelt
 │
 ├── yolo/
-│   ├── yolov3.weights     # YOLOv3 pre-trained weights (not in git — too large)
-│   ├── yolov3.cfg         # YOLOv3 architecture config
-│   └── coco.names         # COCO 80-class labels
+│   ├── yolov3.weights                     # Pre-trained weights (237MB — not in git)
+│   ├── yolov3.cfg                         # YOLOv3 architecture config
+│   └── coco.names                         # COCO 80-class labels
 │
-├── driver_faces/          # Registered driver face images (not in git — privacy)
-├── violations_screenshots/ # Saved violation evidence (not in git — too large)
+├── shape_predictor_68_face_landmarks.dat  # dlib facial landmark model
 │
-├── requirements.txt       # Python dependencies
-├── .env                   # Environment variables (never commit this)
+├── docs/screenshots/                      # Sample violation evidence screenshots
+├── driver_faces/                          # Registered driver face images (not in git)
+├── violations_screenshots/                # Live violation evidence (not in git)
+│
+├── Dockerfile                             # Production Docker image
+├── requirements.txt                       # Python dependencies
+├── .env                                   # Environment variables (never commit)
 └── .gitignore
-🚨 Violations Detected
-Critical (SMS + Email + Audio + Screenshot)
+```
 
-DROWSINESS — eyes closing, head dropping
-EYES_CLOSED — sustained eye closure
-PHONE_USE — phone detected in hand while driving
-UNAUTHORIZED_DRIVER — unrecognized face at the wheel
-DRUNK_DRIVING — pattern escalation (drowsy + distracted repeatedly)
+---
 
-High Severity (Email + Audio + Screenshot)
+## ⚙️ Installation
 
-DISTRACTION — driver not looking at road
-NO_SEATBELT — seatbelt not fastened
-SMOKING — smoking detected via YOLO
+### Prerequisites
 
-Medium Severity (Audio + Screenshot)
+- Python 3.11+
+- Spring Boot backend running on port 8080
+- Webcam or dashcam connected
+- YOLOv3 weights file
 
-FATIGUE — yawning detected
-EATING — eating while driving
-DRINKING — drinking while driving
+### 1. Clone the repository
 
-⚙️ Installation
-Prerequisites
+```bash
+git clone https://github.com/mariusbayizere/DriveGuardAI-.git
+cd DriveGuardAI-/python-service
+```
 
-Python 3.10+
-Java Spring Boot backend running on port 8080
-Webcam or dashcam connected
-YOLOv3 weights file (download here)
+### 2. Create virtual environment
 
-1. Clone the repository
-bashgit clone https://github.com/mariusbayizere/python-service.git
-cd python-service
-2. Create and activate virtual environment
-bashpython3 -m venv venv
+```bash
+python3 -m venv venv
 source venv/bin/activate
-3. Install dependencies
-bashpip install -r requirements.txt
-4. Download YOLO weights
-bashmkdir -p yolo
+```
+
+### 3. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Download YOLO weights
+
+```bash
+mkdir -p yolo
 wget https://pjreddie.com/media/files/yolov3.weights -O yolo/yolov3.weights
 wget https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/yolov3.cfg -O yolo/yolov3.cfg
-wget https://raw.githubusercontent.com/pjreddie/darknet/master/data/coco.names
+wget https://raw.githubusercontent.com/pjreddie/darknet/master/data/coco.names -O yolo/coco.names
+```
 
-5. Configure environment variables
-bashcp .env.example .env
+### 5. Configure environment variables
+
+```bash
 nano .env
-env# Java Backend
+```
+
+```env
+# Java Backend
 JAVA_BACKEND_URL=http://localhost:8080
 
 # Directories
-SCREENSHOTS_DIR=/home/marius/python-service/violations_screenshots
-DRIVER_FACES_DIR=/home/marius/python-service/driver_faces
+SCREENSHOTS_DIR=/path/to/violations_screenshots
+DRIVER_FACES_DIR=/path/to/driver_faces
 
 # Twilio SMS
 TWILIO_ACCOUNT_SID=your_account_sid
@@ -127,87 +326,184 @@ TWILIO_AUTH_TOKEN=your_auth_token
 TWILIO_FROM_NUMBER=+1XXXXXXXXXX
 MANAGER_PHONE=+250XXXXXXXXX
 
-# YOLO
-YOLO_WEIGHTS=/home/marius/python-service/yolo/yolov3.weights
-YOLO_CFG=/home/marius/python-service/yolo/yolov3.cfg
-YOLO_NAMES=/home/marius/python-service/yolo/coco.names
+# YOLO Model Paths
+YOLO_WEIGHTS=/path/to/yolo/yolov3.weights
+YOLO_CFG=/path/to/yolo/yolov3.cfg
+YOLO_NAMES=/path/to/yolo/coco.names
 
-# Detection
+# Detection Settings
 VIOLATION_COOLDOWN=10
-6. Start the service
-bashpython api_server.py
+```
 
-🔌 API Reference
-Monitoring
-MethodEndpointDescriptionPOST/api/monitoring/startStart a monitoring sessionPOST/api/monitoring/stopStop the active sessionGET/api/monitoring/statusGet current session statusGET/api/streamLive MJPEG video stream
-Start session request body:
-json{
+### 6. Start the service
+
+```bash
+python api_server.py
+```
+
+Service runs at: `http://localhost:5000`
+
+---
+
+## 📖 API Reference
+
+### 🎥 Monitoring
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/monitoring/start` | Start a monitoring session |
+| POST | `/api/monitoring/stop` | Stop the active session |
+| GET | `/api/monitoring/status` | Get current session status |
+| GET | `/api/stream` | Live MJPEG video stream |
+
+**Start session request body:**
+```json
+{
   "driver_id": 1,
   "vehicle_id": 2,
   "trip_id": 3,
   "driver_name": "John Doe",
-  "vehicle_name": "Toyota Hilux KAB 001A",
+  "vehicle_name": "Toyota Hilux (RAB-001A)",
   "trip_name": "Kigali — Musanze Route"
 }
-Health & Diagnostics
-MethodEndpointDescriptionGET/api/healthSystem health checkGET/api/test-yoloTest YOLO detection livePOST/api/test-smsSend a test SMS alertGET/api/test-java-connectionVerify Java backend connection
-Screenshots
-MethodEndpointDescriptionGET/api/screenshotsList all violation screenshotsGET/api/screenshots/<filename>Serve a specific screenshot image
-Drivers
-MethodEndpointDescriptionPOST/api/drivers/register-faceRegister a driver's faceGET/api/drivers/known-facesList all registered drivers
+```
 
-🔍 How It Works
-1. Session Start
-When a trip begins, the React dashboard calls /api/monitoring/start with driver, vehicle, and trip details. The system opens the camera and begins real-time analysis.
-2. Frame Processing (30 FPS)
-Every frame is processed by the Driver Monitoring System (DMS) which uses facial landmark detection to monitor:
+### 🏥 Health & Diagnostics
 
-Eye aspect ratio (EAR) → drowsiness/eye closure
-Head pose estimation → distraction
-Mouth aspect ratio → yawning
-Shoulder/torso detection → seatbelt
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/health` | System health check |
+| GET | `/api/test-yolo` | Test YOLO detection live |
+| POST | `/api/test-sms` | Send a test SMS alert |
+| GET | `/api/test-java-connection` | Verify Java backend connection |
 
-3. YOLO Object Detection (~1 FPS)
-Every 30 frames, YOLOv3 scans for physical objects: phones, food, drinks, and smoking materials.
-4. Drunk Driving Pattern Engine
-A sliding 60-second window monitors co-occurrence of drowsiness and distraction events. If both fire 2+ times within the window, the system escalates to a DRUNK_DRIVING violation — the highest severity level.
-5. Violation Response Pipeline
-Violation Detected
-      │
-      ├─▶ Save screenshot to disk
-      ├─▶ Play audio warning (TTS)
-      ├─▶ POST to Java backend → database
-      ├─▶ Send SMS to fleet manager (critical only)
-      └─▶ Send email via Java notification service
+**Health response example:**
+```json
+{
+  "status": "healthy",
+  "yolo_loaded": true,
+  "face_recog": false,
+  "tts_available": false,
+  "twilio_configured": true,
+  "monitoring_active": false,
+  "known_drivers": 0,
+  "timestamp": "2026-05-15T10:00:00"
+}
+```
 
-flask
-flask-cors
-opencv-python
-numpy
-pyttsx3
-face-recognition
-twilio
-python-dotenv
-requests
-dlib
-imutils
-scipy
-Install all with:
-bashpip install -r requirements.txt
+### 📸 Screenshots
 
-🌍 Real-World Comparison
-FeatureDriveGuardAILytx DriveCamSamsara AIDrowsiness detection✅✅✅Phone use detection✅✅✅Distraction detection✅✅✅Seatbelt detection✅✅✅Audio in-cabin alerts✅✅✅Screenshot evidence✅✅✅SMS/Email alerts✅✅✅Driver identification✅✅✅Drunk driving detection✅❌❌Open source✅❌❌
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/screenshots` | List all violation screenshots |
+| GET | `/api/screenshots/<filename>` | Serve a specific screenshot |
 
-🔐 Security Notes
+### 🧑 Driver Face Registration
 
-Never commit your .env file — it is listed in .gitignore
-Rotate your Twilio Auth Token immediately if it is ever exposed
-Driver face images are stored locally and never uploaded to GitHub
-All violation screenshots remain on-device and are served via authenticated API
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/drivers/register-face` | Register a driver's face |
+| GET | `/api/drivers/known-faces` | List all registered drivers |
 
-👨‍💻 Author
-Marius Bayizere
+---
+
+## 🔍 How It Works
+
+### 1. Session Start
+When a trip begins, the React dashboard calls `POST /api/monitoring/start` with driver, vehicle, and trip details. The service opens the camera and begins real-time analysis.
+
+### 2. Frame Processing (30 FPS)
+Every frame is processed by the Driver Monitoring System (DMS) which uses **dlib 68 facial landmarks** to monitor:
+
+- **Eye Aspect Ratio (EAR)** → drowsiness and eye closure
+- **Head pose estimation** → distraction detection
+- **Mouth aspect ratio** → yawning / fatigue
+- **Shoulder / torso detection** → seatbelt status
+
+### 3. YOLO Object Detection (~1 FPS)
+Every 30 frames, **YOLOv3** scans for physical objects:
+
+```
+COCO classes monitored:
+  Phone use  → cell phone, remote, mouse
+  Eating     → sandwich, pizza, apple, fork, knife, spoon
+  Drinking   → bottle, cup, wine glass, bowl
+  Smoking    → cigarette, cigar
+```
+
+### 4. Drunk Driving Pattern Engine
+A **60-second sliding window** monitors co-occurrence of violations. If drowsiness fires 2+ times AND distraction fires 2+ times within the same window, the system escalates to `DRUNK_DRIVING` — the highest severity level.
+
+### 5. Face Verification
+At session start, the system captures a frame and compares it against the registered face of the assigned driver using **face_recognition**. A mismatch triggers an `UNAUTHORIZED_DRIVER` violation.
+
+---
+
+## 🐳 Docker & Kubernetes
+
+### Build Docker image
+
+```bash
+docker build -t mariusbayizere/driveguard-flask:latest .
+docker push mariusbayizere/driveguard-flask:latest
+```
+
+### Deploy to Kubernetes
+
+```bash
+kubectl set image deployment/driveguard-flask \
+  flask=mariusbayizere/driveguard-flask:latest -n prod
+
+kubectl rollout status deployment/driveguard-flask -n prod
+```
+
+### Check service health
+
+```bash
+curl https://driveguard.duckdns.org/ai/api/health
+```
+
+---
+
+## 🌍 Comparison with Commercial Solutions
+
+| Feature | DriveGuardAI | Lytx DriveCam | Samsara AI |
+|---------|-------------|---------------|------------|
+| Drowsiness detection | ✅ | ✅ | ✅ |
+| Phone use detection | ✅ | ✅ | ✅ |
+| Distraction detection | ✅ | ✅ | ✅ |
+| Seatbelt detection | ✅ | ✅ | ✅ |
+| Audio in-cabin alerts | ✅ | ✅ | ✅ |
+| Screenshot evidence | ✅ | ✅ | ✅ |
+| SMS / Email alerts | ✅ | ✅ | ✅ |
+| Driver identification | ✅ | ✅ | ✅ |
+| Drunk driving detection | ✅ | ❌ | ❌ |
+| Open source | ✅ | ❌ | ❌ |
+| Self-hosted | ✅ | ❌ | ❌ |
+
+---
+
+## 🔐 Security Notes
+
+- Never commit your `.env` file — it is listed in `.gitignore`
+- Rotate your Twilio Auth Token immediately if ever exposed
+- Driver face images are stored locally and never uploaded to GitHub
+- All violation screenshots remain on-device and are served via the API
+
+---
+
+## 👨‍💻 Author
+
+**Bayizere Marius**  
 Backend Software Engineer | Kigali, Rwanda
 
-📄 License
-This project is licensed under the MIT License — see the LICENSE file for details.
+- 📧 Email: bayizeremarius119@gmail.com
+- 💼 LinkedIn: https://www.linkedin.com/in/bayizere-marius/
+- 🐙 GitHub: https://github.com/mariusbayizere
+- 🌐 Live App: https://driveguard.duckdns.org
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
