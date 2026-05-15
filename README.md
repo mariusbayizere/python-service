@@ -57,45 +57,45 @@ All of this happens within **2–3 seconds** of violation detection.
 Real violation evidence automatically captured by the AI system during live monitoring sessions.
 
 ### 👁️ Eyes Closed — Drowsiness Detected
-![Eyes Closed 1](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/eyes_closed_20260418_074137.jpg)
+![Eyes Closed 1](https://raw.githubusercontent.com/mariusbayizere/python-service/main/docs/screenshots/eyes_closed_20260418_074137.jpg)
 
 ---
 
-![Eyes Closed 2](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/eyes_closed_20260418_074148.jpg)
+![Eyes Closed 2](https://raw.githubusercontent.com/mariusbayizere/python-service/main/docs/screenshots/eyes_closed_20260418_074148.jpg)
 
 ---
 
-![Eyes Closed 3](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/eyes_closed_20260418_074158.jpg)
+![Eyes Closed 3](https://raw.githubusercontent.com/mariusbayizere/python-service/main/docs/screenshots/eyes_closed_20260418_074158.jpg)
 
 ---
 
-![Eyes Closed 4](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/eyes_closed_20260424_093326.jpg)
+![Eyes Closed 4](https://raw.githubusercontent.com/mariusbayizere/python-service/main/docs/screenshots/eyes_closed_20260424_093326.jpg)
 
 ---
 
 ### 🔔 No Seatbelt — Safety Violation Detected
-![No Seatbelt 1](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/no_seatbelt_20260205_075413.jpg)
+![No Seatbelt 1](https://raw.githubusercontent.com/mariusbayizere/python-service/main/docs/screenshots/no_seatbelt_20260205_075413.jpg)
 
 ---
 
-![No Seatbelt 2](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/no_seatbelt_20260207_094231.jpg)
+![No Seatbelt 2](https://raw.githubusercontent.com/mariusbayizere/python-service/main/docs/screenshots/no_seatbelt_20260207_094231.jpg)
 
 ---
 
-![No Seatbelt 3](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/no_seatbelt_20260305_111727.jpg)
+![No Seatbelt 3](https://raw.githubusercontent.com/mariusbayizere/python-service/main/docs/screenshots/no_seatbelt_20260305_111727.jpg)
 
 ---
 
 ### 📱 Phone Use — Distracted Driving Detected
-![Phone Use 1](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/phone_use_20260413_072734.jpg)
+![Phone Use 1](https://raw.githubusercontent.com/mariusbayizere/python-service/main/docs/screenshots/phone_use_20260413_072734.jpg)
 
 ---
 
-![Phone Use 2](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/phone_use_20260413_075720.jpg)
+![Phone Use 2](https://raw.githubusercontent.com/mariusbayizere/python-service/main/docs/screenshots/phone_use_20260413_075720.jpg)
 
 ---
 
-![Phone Use 3](https://raw.githubusercontent.com/mariusbayizere/DriveGuardAI-/main/python-service/docs/screenshots/phone_use_20260424_124337.jpg)
+![Phone Use 3](https://raw.githubusercontent.com/mariusbayizere/python-service/main/docs/screenshots/phone_use_20260424_124337.jpg)
 
 ---
 
